@@ -1,0 +1,13 @@
+{
+  "name": "miningtycoon",
+  "version": "0.1.0",
+  "description": "DeFi Token Mining App",
+  "author": "mattlee2021@gmail.com",
+  "dependencies": {
+    "@openzeppelin/contracts": "3.2.0",
+    "@truffle/hdwallet-provider": "1.0.44",
+    "dotenv": "^8.2.0",
+    "truffle": "5.1.39",
+    "web3": "1.2.11"
+  }
+}
