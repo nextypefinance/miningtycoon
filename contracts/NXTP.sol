@@ -18,7 +18,6 @@ contract NXTP is ERC20, Ownable {
    
         _mint(_msgSender(),       supply);
 
-        transferOwnership(_msgSender());
     }
 }
 
