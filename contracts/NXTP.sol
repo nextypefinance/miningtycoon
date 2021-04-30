@@ -14,7 +14,7 @@ contract NXTP is ERC20, Ownable {
      * Transfers ownership to another account. So, the token creator will not be counted as an owner.
      */
     constructor() public ERC20("NEXTYPE", "NXTP") {
-        uint256 supply        = 2000000000 * (10 ** 18);
+        uint256 supply        = 1000000000 * (10 ** 18);
    
         _mint(_msgSender(),       supply);
 
