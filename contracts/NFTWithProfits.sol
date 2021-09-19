@@ -6,17 +6,17 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 
-contract NTNFT is ERC721, Ownable, ReentrancyGuard {
+contract GLMNFT is ERC721, Ownable, ReentrancyGuard {
     using SafeMath for uint256;
 
-    uint256 private constant maxSupply = 100;
+    uint256 private constant maxSupply = 1111;
     uint256[maxSupply] profitsList;
 
-    event AllotProfits(uint256 amount);
-    event AllotProfitsByNumber(uint256 amount, uint256 start, uint256 num);
+    event AllotProfits(address token, uint256 amount);
+    event AllotProfitsByNumber(address token, uint256 amount, uint256 start, uint256 num);
     event ClaimProfits(address token);
   
-    constructor() public ERC721("NT-NFT", "NT-NFT") {
+    constructor() public ERC721("NEXTYPE GENESIS LAUNCH MEMORIAL", "NEXTYPE GLM") {
  
     }
   
@@ -89,7 +89,8 @@ contract NTNFT is ERC721, Ownable, ReentrancyGuard {
     }
 
 
-    function allotProfits(uint256 amount) external onlyOwner nonReentrant {
+    function allotProfits(address token, uint256 amount) external onlyOwner nonReentrant {
+        require(token != address(0), "token is zero address");
         require(amount > 0, "amount cannot be 0");
         uint256 tmpTotalSupply = totalSupply();
         require(tmpTotalSupply > 0, "totalSupply cannot be 0");
@@ -101,10 +102,13 @@ contract NTNFT is ERC721, Ownable, ReentrancyGuard {
             profitsList[index] = profitsList[index].add(tmpProfits);
         }
 
-        emit AllotProfits(amount);
+        IERC20(token).transferFrom(msg.sender, address(this), amount);
+
+        emit AllotProfits(token, amount);
     }
 
-    function allotProfitsByNumber(uint256 amount, uint256 start, uint256 num) external onlyOwner nonReentrant {
+    function allotProfitsByNumber(address token, uint256 amount, uint256 start, uint256 num) external onlyOwner nonReentrant {
+        require(token != address(0), "token is zero address");
         require(amount > 0, "amount cannot be 0");
         require(num > 0, "num cannot be 0");
         uint256 tmpTotalSupply = totalSupply();
@@ -118,7 +122,9 @@ contract NTNFT is ERC721, Ownable, ReentrancyGuard {
             profitsList[index] = profitsList[index].add(tmpProfits);
         }
 
-        emit AllotProfitsByNumber(amount, start, num);
+        IERC20(token).transferFrom(msg.sender, address(this), amount);
+
+        emit AllotProfitsByNumber(token, amount, start, num);
     }
 
     function claimProfits(address token) external nonReentrant {
@@ -139,13 +145,13 @@ contract NTNFT is ERC721, Ownable, ReentrancyGuard {
         require(myProfits > 0, "my profits is zero");
         require(IERC20(token).balanceOf(address(this)) > myProfits, "Address: insufficient balance for call");
 
-        IERC20(token).transfer(msg.sender, myProfits);
-
         for (index = 0; index < myTokens.length; index++) {
             if(myTokens[index] <= profitsList.length){
                 profitsList[myTokens[index] - 1 ] = 0;
             }
         }
+
+        IERC20(token).transfer(msg.sender, myProfits);
 
         emit ClaimProfits(token);
     }
